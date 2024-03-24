@@ -4,6 +4,7 @@ using System.Threading;
 
 public class UniqueIdentifierGenerator
 {
+    // Method to generate unique identifier
     public static Guid GenerateUniqueIdentifier()
     {
         return Guid.NewGuid();
@@ -12,18 +13,22 @@ public class UniqueIdentifierGenerator
 
 class Program
 {
-    private static ConcurrentBag<Guid> generatedIdentifiers = new ConcurrentBag<Guid>();
+    private static ConcurrentDictionary<Guid, object> generatedIdentifiers = new ConcurrentDictionary<Guid, object>();
 
     static void GenerateAndStoreUniqueIdentifier()
     {
         Guid id = UniqueIdentifierGenerator.GenerateUniqueIdentifier();
-        generatedIdentifiers.Add(id);
-        Console.WriteLine($"Generated Unique Identifier: {id}");
+        // Assuming null as placeholder data for demonstration
+        bool added = generatedIdentifiers.TryAdd(id, null);
+        if (added)
+        {
+            Console.WriteLine($"Generated Unique Identifier: {id}");
+        }
     }
 
     static void Main(string[] args)
     {
-        const int numberOfThreads = 100;
+        const int numberOfThreads = 10;
         var threads = new Thread[numberOfThreads];
 
         for (int i = 0; i < numberOfThreads; i++)
